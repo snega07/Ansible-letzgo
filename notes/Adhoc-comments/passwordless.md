@@ -100,6 +100,28 @@ ssh ubuntu@<INSTANCE-PUBLIC-IP>
 
 No PEM file is required for future logins from that machine because SSH uses your local private key (`~/.ssh/id_ed25519`) and the corresponding public key stored on the remote server.
 
+### Adhoc Commands
+
+**ansible -i inventry.ini -m ping all**
+
+snega@DESKTOP-0L0EMT8:~/Ansible-letzgo$ ansible -i inventry.ini -m ping all
+
+/etc/ansible/host => we can add the iventory file to the host location no need to pass it in command every time.
+ubuntu@13.233.246.170 | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+ubuntu@13.232.9.4 | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+
 ### How passwordless works?
 
 so when we do ssh-copy-id it copies our public key from local and keep it in the remote servers authorized_key location and further ssh public and private key authentication takes place.
@@ -130,49 +152,3 @@ Remote:
 
 ~/.ssh/authorized_keys
 
-________________________________________________________________-
-
-allow access of control node server in VM B(manged node)
-
-for this setup we need one time login with pem/ password
-
-later no auth required for communication
-
-password -> enable password auth in ec2
-pub and privatekey
-
-ssh copyId
-
-Now control node can talk to Mange node without asking for password or ssh key => password less authentication
-
-Control Node : Server -> install python, and ansible and setup password less auth
-manages node: servers -> install python
-
-Inventry => provide ansible a file that has the managed server names. inventry.ini, inventry.yaml
-
-inventry.ini
-
-servername_1(resolves to publicIP)@username
-servername_2(resolves to publicIP)@username
-
-This can be on any path in Vm and provide this path to ansible.(recommended) each project can have thier own ini file
-
-If u don't want to pass itmeverytime
-
-/etc/ansible/host
-
-ansible -i (inventry.ini) inventry.ini -m[module] ping [arguement] all
-
-all -> means all the server in ini
-or we could even specify the server name directly. Server mist be there in the iventry file.
-
-we can also name a set of server like below
-
-[webservers]
-servername_1(resolves to publicIP)@username
-servername_2(resolves to publicIP)@username
-
-
-adhoc commands -> simple quick commands.
-
-palybook -> complex multiple steps tasks. Reusable modules roles.
