@@ -4,6 +4,8 @@ Ansible is an open-source configuration management, deployment, orchestration, a
 
 One of Ansible's biggest advantages is that it is agentless, meaning no Ansible agent needs to be installed on the managed servers.
 
+![alt text](image.png)
+
 ### Why was Ansible introduced?
 
 Before Ansible, system administrators managed servers manually.
