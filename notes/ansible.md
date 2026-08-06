@@ -60,6 +60,52 @@ Advantages:
 - Large collection of built-in modules.
 - Idempotent by design (running the same playbook repeatedly doesn't make unnecessary changes).
 
+### What is idempotency?
+
+An operation is idempotent if running it multiple times produces the same end state without causing unwanted changes or errors.
+
+### Is ansible has state file??
+
+"No, Ansible does not maintain a state file like Terraform. Its modules are idempotent because they query the current state of the managed node during execution using SSH and compare it with the desired state defined in the playbook. If the desired state already exists, Ansible reports ok; otherwise, it makes the necessary changes and reports changed."
+
+Shell script example (not inherently idempotent)
+mkdir /app
+cp config.yaml /app/
+useradd appuser
+
+First run: Success
+Second run:
+
+mkdir: File exists
+cp: overwrites file
+useradd: user 'appuser' already exists
+
+The script doesn't automatically know the desired state. You have to add checks yourself.
+
+Ansible example
+- name: Create directory
+  file:
+    path: /app
+    state: directory
+
+- name: Copy config
+  copy:
+    src: config.yaml
+    dest: /app/config.yaml
+
+- name: Create user
+  user:
+    name: appuser
+    state: present
+
+First run: changed=3
+Second run:
+ok=3
+changed=0
+
+Ansible checks the current state before taking action.
+
+
 **Architecture**
                Control Node
           (Ansible Installed)
